@@ -10,6 +10,38 @@ window.onload = function() {
     	tiles[i].style.left = (i%4*100)+'px';
     	tiles[i].style.top = (parseInt(i/4)*100) + 'px';
     	tiles[i].style.backgroundPosition= '-' + tiles[i].style.left + ' ' + '-' + tiles[i].style.top;
+    	pieces[i].onmouseover = function()
+    {
+      if (moveCheck(parseInt(this.innerHTML)))
+      {
+        this.setAttribute('class', 'puzzlepiece movablepiece');
+      }
+    }
+     pieces[i].onclick = function(){
+      if (moveCheck(parseInt(this.innerHTML))){
+        swap(this.innerHTML-1);
+        if (finished()===true){
+          setTimeout(function()
+          {
+          document.getElementsByTagName("H1")[0].setAttribute("id", "change");
+          document.getElementById('change').innerHTML = ("YOU WON, CONGRATULATIONS");
+          }, 500);
+          setTimeout(function()
+          {
+          alert("The winning text will revert back to normal within ten seconds");
+        }, 1000); 
+
+          setTimeout(function()
+          {
+          document.getElementsByTagName("H1")[0].setAttribute("id", "change");
+          document.getElementById('change').innerHTML = ("Fifteen Puzzle");
+        }, 10000);
+
+
+
+
+        }
+
 	}
 	var shufflebutton = document.getElementById('shufflebutton');
   shufflebutton.onclick = function(){
@@ -122,4 +154,43 @@ function moveDown(x, y)
   {
     return -1;
   }
+}
+
+function moveCheck(pos)
+{
+  if (moveLeft(posX, posY) == (pos-1))
+  {
+    return true;
+  }
+
+  if (moveDown(posX, posY) == (pos-1))
+  {
+    return true;
+  }
+
+  if (moveUp(posX, posY) == (pos-1))
+  {
+    return true;
+  }
+
+  if (moveRight(posX, posY) == (pos-1))
+  {
+    return true;
+  }
+}
+
+function finished()
+{
+  var finish = true;
+  for (var q = 0; q < pieces.length; q++)
+  {
+    var y = parseInt(pieces[q].style.top);
+    var x = parseInt(pieces[q].style.left);
+    if (x != (q%4*100) || y != parseInt(q/4)*100)
+    {
+      finish = false;
+      break;
+    }
+  }
+  return finish;
 }
