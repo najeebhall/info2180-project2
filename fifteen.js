@@ -1,48 +1,53 @@
 var posX;
 var posY;
-var pieces;
+var tiles;
 window.onload = function() {
 	var walls = document.getElementById("puzzlearea");
-	var tiles = walls.getElementsByTagName('div');
+	tiles = walls.getElementsByTagName('div');
 	for (var i = 0; i < tiles.length; i++) {
 		tiles[i].setAttribute("class", "puzzlepiece");
 		//tiles[i].className = 'puzzlepiece';
     	tiles[i].style.left = (i%4*100)+'px';
     	tiles[i].style.top = (parseInt(i/4)*100) + 'px';
     	tiles[i].style.backgroundPosition= '-' + tiles[i].style.left + ' ' + '-' + tiles[i].style.top;
-    	pieces[i].onmouseover = function()
-    {
-      if (moveCheck(parseInt(this.innerHTML)))
-      {
-        this.setAttribute('class', 'puzzlepiece movablepiece');
-      }
-    }
-     pieces[i].onclick = function(){
-      if (moveCheck(parseInt(this.innerHTML))){
-        swap(this.innerHTML-1);
-        if (finished()===true){
-          setTimeout(function()
-          {
-          document.getElementsByTagName("H1")[0].setAttribute("id", "change");
-          document.getElementById('change').innerHTML = ("YOU WON, CONGRATULATIONS");
-          }, 500);
-          setTimeout(function()
-          {
-          alert("The winning text will revert back to normal within ten seconds");
-        }, 1000); 
+    	tiles[i].onmouseover = function()
+    	{
+      		if (moveCheck(parseInt(this.innerHTML)))
+      		{
+        		this.setAttribute('class', 'puzzlepiece movablepiece');
+      		}
+    	}
+     	tiles[i].onclick = function(){
+      		if (moveCheck(parseInt(this.innerHTML))){
+        		swap(this.innerHTML-1);
+        		if (finished()===true){
+          			setTimeout(function()
+          			{
+          				document.getElementsByTagName("H1")[0].setAttribute("id", "change");
+          				var test = document.getElementsByTagName('title');
+          				var pic = document.createElement("IMG");
+          				pic.setAttribute("src", "https://bfgblog-a.akamaihd.net/uploads/2015/01/Screen-Shot-2015-01-28-at-1.24.57-PM.png");
+          				pic.style.float = top;
+          				document.body.appendChild(pic);
+          				document.getElementById('change').innerHTML = ("YOU HAVE WON!! SEE BELOW!");
+          				}, 500);
+          			setTimeout(function()
+          			{
+          				alert("The winning text will revert back to normal within ten seconds");
+        				}, 1000); 
 
-          setTimeout(function()
-          {
-          document.getElementsByTagName("H1")[0].setAttribute("id", "change");
-          document.getElementById('change').innerHTML = ("Fifteen Puzzle");
-        }, 10000);
-
-
-
-
+          			setTimeout(function()
+          			{
+          				document.getElementsByTagName("H1")[0].setAttribute("id", "change");
+          				document.getElementById('change').innerHTML = ("Fifteen Puzzle");
+        				}, 10000);
+				}
+				return;		
+			}
         }
-
 	}
+	posX = '300px';
+  	posY = '300px';
 	var shufflebutton = document.getElementById('shufflebutton');
   shufflebutton.onclick = function(){
   	for (var k = 0; k < 250; k++){
@@ -76,6 +81,16 @@ window.onload = function() {
   }
 }
 
+function swap(pos)
+{
+  var temp = tiles[pos].style.top;
+  tiles[pos].style.top = posY;
+  posY = temp;
+  temp = tiles[pos].style.left;
+  tiles[pos].style.left = posX;
+  posX = temp;
+}
+
 function moveLeft(x, y)
 {
   var xx = parseInt(x);
@@ -83,9 +98,9 @@ function moveLeft(x, y)
 
   if (xx > 0)
   {
-    for (var m = 0; m < pieces.length; m++)
+    for (var m = 0; m < tiles.length; m++)
     {
-      if (parseInt(pieces[m].style.left) + 100 == xx && parseInt(pieces[m].style.top) == yy)
+      if (parseInt(tiles[m].style.left) + 100 == xx && parseInt(tiles[m].style.top) == yy)
       {
         return m;
       }
@@ -103,9 +118,9 @@ function moveRight(x, y)
   var yy = parseInt(y);
   if (xx < 300)
   {
-    for (var n =0; n < pieces.length; n++)
+    for (var n =0; n < tiles.length; n++)
     {
-      if (parseInt(pieces[n].style.left) - 100 == xx && parseInt(pieces[n].style.top) == yy)
+      if (parseInt(tiles[n].style.left) - 100 == xx && parseInt(tiles[n].style.top) == yy)
       {
         return n;
       }
@@ -123,8 +138,8 @@ function moveUp(x, y)
   var yy = parseInt(y);
   if (yy > 0)
   {
-    for (var o = 0; o < pieces.length; o++){
-      if (parseInt(pieces[o].style.top) + 100 == yy && parseInt(pieces[o].style.left) == xx)
+    for (var o = 0; o < tiles.length; o++){
+      if (parseInt(tiles[o].style.top) + 100 == yy && parseInt(tiles[o].style.left) == xx)
       {
         return o;
       }
@@ -142,9 +157,9 @@ function moveDown(x, y)
   var yy = parseInt(y);
   if (yy < 300)
   {
-    for (var p = 0; p < pieces.length; p++)
+    for (var p = 0; p < tiles.length; p++)
     {
-      if (parseInt(pieces[p].style.top) - 100 == yy && parseInt(pieces[p].style.left) == xx)
+      if (parseInt(tiles[p].style.top) - 100 == yy && parseInt(tiles[p].style.left) == xx)
       {
         return p;
       }
@@ -182,10 +197,10 @@ function moveCheck(pos)
 function finished()
 {
   var finish = true;
-  for (var q = 0; q < pieces.length; q++)
+  for (var q = 0; q < tiles.length; q++)
   {
-    var y = parseInt(pieces[q].style.top);
-    var x = parseInt(pieces[q].style.left);
+    var y = parseInt(tiles[q].style.top);
+    var x = parseInt(tiles[q].style.left);
     if (x != (q%4*100) || y != parseInt(q/4)*100)
     {
       finish = false;
